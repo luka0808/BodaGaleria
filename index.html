@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Galería de Fotos - Nene & Dani</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ========== VARIABLES GLOBALES ========== */
+    :root {
+      --color-fondo: #f7f4ef;
+      --color-principal: #b08a5a; 
+      --color-principal-dark: #997349;
+      --color-texto: #444444;
+      --color-blanco: #ffffff;
+      --nav-height: 70px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Montserrat", system-ui, sans-serif;
+      background-color: var(--color-fondo);
+      color: var(--color-texto);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; transition: all 0.3s; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ===== NAVBAR SIMPLE ===== */
+    nav {
+      position: fixed; top: 0; width: 100%; height: var(--nav-height);
+      background: rgba(247,244,239, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(176, 138, 90, 0.1);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .nav-btn {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;
+        font-weight: 600; color: var(--color-principal);
+        border: 1px solid var(--color-principal);
+        padding: 8px 20px; border-radius: 50px;
+        background: transparent;
+    }
+    .nav-btn:hover { background: var(--color-principal); color: #fff; }
+
+    /* ===== HEADER ===== */
+    header {
+        padding-top: 120px; padding-bottom: 40px; text-align: center;
+        background-image: linear-gradient(to bottom, transparent 0%, var(--color-fondo) 100%), url('Fotos/FondoTextura.png'); 
+    }
+
+    .page-title {
+        font-family: "Allura", cursive;
+        font-size: 4rem; color: var(--color-principal);
+        line-height: 1.2; margin-bottom: 10px;
+    }
+    .page-subtitle {
+        font-size: 1rem; text-transform: uppercase; letter-spacing: 0.2em; color: #888;
+    }
+
+    /* ===== SECCIONES DEL ÁLBUM ===== */
+    section { max-width: 1100px; margin: 0 auto 5rem; padding: 0 1.5rem; }
+
+    .album-header {
+        text-align: center; margin-bottom: 2rem; position: relative;
+    }
+    .album-title {
+        font-size: 1.8rem; font-weight: 500; color: var(--color-texto); margin-bottom: 0.5rem;
+    }
+    .album-desc {
+        font-size: 0.95rem; color: #666; max-width: 600px; margin: 0 auto 1.5rem;
+    }
+
+    /* ===== GRID DE FOTOS ===== */
+    .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-bottom: 2rem;
+    }
+
+    .photo-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        cursor: pointer;
+        aspect-ratio: 1 / 1; 
+        background-color: #eee; 
+    }
+
+    .photo-item img {
+        width: 100%; height: 100%; object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .photo-item:hover img { transform: scale(1.08); }
+
+    .photo-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(176, 138, 90, 0.4);
+        opacity: 0; transition: opacity 0.3s;
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-size: 2rem;
+    }
+    .photo-item:hover .photo-overlay { opacity: 1; }
+
+    /* ===== BOTONES ACCIÓN ===== */
+    .btn-drive {
+        display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+        background-color: var(--color-principal); color: white;
+        padding: 1rem 2.5rem; border-radius: 50px;
+        font-weight: 600; letter-spacing: 0.05em;
+        box-shadow: 0 10px 20px rgba(176, 138, 90, 0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .btn-drive:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(176, 138, 90, 0.4);
+        background-color: var(--color-principal-dark);
+    }
+
+    .upload-section {
+        background-color: #fff;
+        border-radius: 20px;
+        padding: 4rem 2rem;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        border: 1px dashed var(--color-principal);
+    }
+
+    /* ===== MODAL (VISOR) ===== */
+    .modal {
+        display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.92); align-items: center; justify-content: center;
+    }
+    .modal-content { max-width: 90%; max-height: 90vh; border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; cursor: pointer; }
+    
+    footer { text-align: center; padding: 2rem; color: #999; font-size: 0.8rem; margin-top: 3rem; border-top: 1px solid rgba(0,0,0,0.05); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-title { font-size: 3rem; }
+        .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .upload-section { padding: 2rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html" class="nav-btn">
+       ❮ Volver a la Invitación
+    </a>
+  </nav>
+
+  <header>
+      <div class="page-title">Nuestra Galería</div>
+      <div class="page-subtitle">Los mejores momentos</div>
+  </header>
+
+  <section id="galeria-completa">
+      <div class="album-header">
+          <p class="album-desc">Aquí encontrarás una selección de nuestros momentos favoritos. ¡Pero hay muchos más!</p>
+      </div>
+
+      <div class="photo-grid">
+          
+          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Civil1.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
+          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Civil2.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
+          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Boda1.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
+          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Boda2.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
+          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Boda3.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
+          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Boda4.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
+          
+      </div>
+  </section>
+
+  <section id="google-photos">
+      <div class="upload-section">
+          
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">∞</div>
+          <h2 class="album-title">El Álbum Colaborativo</h2>
+          <p class="album-desc">
+             La galería de arriba es solo un resumen. 
+             ¡Tenemos cientos de fotos más! Entrá a nuestro álbum compartido para verlas todas, dar like y <strong>subir las tuyas</strong>.
+          </p>
+          
+          <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+              
+              <a href="LINK_DE_GOOGLE_PHOTOS" target="_blank" class="btn-drive">
+                 👁️ Ver todas las fotos
+              </a>
+
+              <a href="LINK_DE_GOOGLE_PHOTOS" target="_blank" class="btn-drive" style="background-color: #333; border-color: #333;">
+                 📸 Subir mis fotos
+              </a>
+
+          </div>
+
+      </div>
+  </section>
+
+  <footer>
+      <p>© 2026 Nene & Dani</p>
+  </footer>
+
+  <div id="photoModal" class="modal" onclick="closeModal()">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="modalImg">
+  </div>
+
+  <script>
+      const modal = document.getElementById("photoModal");
+      const modalImg = document.getElementById("modalImg");
+
+      function openModal(element) {
+          const img = element.querySelector('img');
+          modal.style.display = "flex";
+          modalImg.src = img.src;
+      }
+
+      function closeModal() {
+          modal.style.display = "none";
+      }
+      
+      document.addEventListener('keydown', function(event) {
+          if (event.key === "Escape") {
+              closeModal();
+          }
+      });
+  </script>
+
+</body>
+
+</html>
+
+
+
