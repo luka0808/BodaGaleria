@@ -54,7 +54,9 @@
     /* ===== HEADER ===== */
     header {
         padding-top: 120px; padding-bottom: 40px; text-align: center;
+        /* Si no tienes la imagen de fondo, se verá el color liso */
         background-image: linear-gradient(to bottom, transparent 0%, var(--color-fondo) 100%), url('Fotos/FondoTextura.png'); 
+        background-size: cover;
     }
 
     .page-title {
@@ -113,21 +115,23 @@
     }
     .photo-item:hover .photo-overlay { opacity: 1; }
 
-    /* ===== BOTONES ACCIÓN ===== */
+    /* ===== BOTÓN UNIFICADO ===== */
     .btn-drive {
-        display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+        display: inline-flex; align-items: center; justify-content: center; gap: 12px;
         background-color: var(--color-principal); color: white;
-        padding: 1rem 2.5rem; border-radius: 50px;
-        font-weight: 600; letter-spacing: 0.05em;
-        box-shadow: 0 10px 20px rgba(176, 138, 90, 0.3);
-        transition: transform 0.2s, box-shadow 0.2s;
+        padding: 1.2rem 3rem; border-radius: 50px; /* Más grande */
+        font-weight: 600; letter-spacing: 0.05em; font-size: 1.1rem;
+        box-shadow: 0 10px 25px rgba(176, 138, 90, 0.4);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         text-align: center;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
+        border: 2px solid var(--color-principal);
     }
     .btn-drive:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(176, 138, 90, 0.4);
+        transform: translateY(-5px) scale(1.02); /* Efecto de "levantarse" */
+        box-shadow: 0 15px 35px rgba(176, 138, 90, 0.5);
         background-color: var(--color-principal-dark);
+        border-color: var(--color-principal-dark);
     }
 
     .upload-section {
@@ -137,6 +141,8 @@
         text-align: center;
         box-shadow: 0 10px 40px rgba(0,0,0,0.05);
         border: 1px dashed var(--color-principal);
+        max-width: 800px;
+        margin: 0 auto;
     }
 
     /* ===== MODAL (VISOR) ===== */
@@ -154,14 +160,14 @@
         .page-title { font-size: 3rem; }
         .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .upload-section { padding: 2rem 1rem; }
+        .btn-drive { width: 100%; padding: 1rem; font-size: 1rem; }
     }
   </style>
 </head>
 <body>
 
   <nav>
-    <a href="https://luka0808.github.io/BodaDani-Nene/" class="nav-btn">
-       ❮ Volver a la Invitación
+    <a href="index.html" class="nav-btn"> ❮ Volver a la Invitación
     </a>
   </nav>
 
@@ -176,37 +182,29 @@
       </div>
 
       <div class="photo-grid">
-          
-          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Civil1.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
-          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Civil2.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
-          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Boda1.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
-          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Boda2.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
-          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Boda3.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
-          <div class="photo-item" onclick="openModal(this)"><img src="Fotos/Boda4.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
-          
+          <div class="photo-item" onclick="openModal(this)"><img src="GooglePhotos/Portada" alt="Foto"><div class="photo-overlay">+</div></div>
+
+
       </div>
   </section>
 
   <section id="google-photos">
       <div class="upload-section">
           
-          <div style="font-size: 3rem; margin-bottom: 0.5rem;">∞</div>
-          <h2 class="album-title">El Álbum Colaborativo</h2>
+          <div style="font-size: 3.5rem; margin-bottom: 0.5rem; color: var(--color-principal);">📸</div>
+          <h2 class="album-title">Álbum Compartido</h2>
           <p class="album-desc">
              La galería de arriba es solo un resumen. 
-             ¡Tenemos cientos de fotos más! Entrá a nuestro álbum compartido para verlas todas, dar like y <strong>subir las tuyas</strong>.
+             ¡Tenemos cientos de fotos más! Entrá a nuestro álbum en Google Photos para verlas todas y <strong>subir las tuyas</strong>.
           </p>
           
-          <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-              
-              <a href="LINK_DE_GOOGLE_PHOTOS" target="_blank" class="btn-drive">
-                 👁️ Ver todas las fotos
+          <div style="margin-top: 2rem;">
+              <a href="https://photos.app.goo.gl/a2m6Go6DkdTi1McM6" target="_blank" class="btn-drive">
+                 Ver & subir fotos
               </a>
-
-              <a href="LINK_DE_GOOGLE_PHOTOS" target="_blank" class="btn-drive" style="background-color: #333; border-color: #333;">
-                 📸 Subir mis fotos
-              </a>
-
+              <p style="font-size: 0.75rem; margin-top: 10px; color: #999;">
+                  (Podés dar "Me gusta" ❤️ y comentar)
+              </p>
           </div>
 
       </div>
@@ -243,11 +241,4 @@
   </script>
 
 </body>
-
 </html>
-
-
-
-
-
-
