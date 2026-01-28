@@ -54,7 +54,6 @@
     /* ===== HEADER ===== */
     header {
         padding-top: 120px; padding-bottom: 40px; text-align: center;
-        /* Si no tienes la imagen de fondo, se verá el color liso */
         background-image: linear-gradient(to bottom, transparent 0%, var(--color-fondo) 100%), url('Fotos/FondoTextura.png'); 
         background-size: cover;
     }
@@ -119,7 +118,7 @@
     .btn-drive {
         display: inline-flex; align-items: center; justify-content: center; gap: 12px;
         background-color: var(--color-principal); color: white;
-        padding: 1.2rem 3rem; border-radius: 50px; /* Más grande */
+        padding: 1.2rem 3rem; border-radius: 50px; 
         font-weight: 600; letter-spacing: 0.05em; font-size: 1.1rem;
         box-shadow: 0 10px 25px rgba(176, 138, 90, 0.4);
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -128,7 +127,7 @@
         border: 2px solid var(--color-principal);
     }
     .btn-drive:hover {
-        transform: translateY(-5px) scale(1.02); /* Efecto de "levantarse" */
+        transform: translateY(-5px) scale(1.02);
         box-shadow: 0 15px 35px rgba(176, 138, 90, 0.5);
         background-color: var(--color-principal-dark);
         border-color: var(--color-principal-dark);
@@ -145,13 +144,28 @@
         margin: 0 auto;
     }
 
-    /* ===== MODAL (VISOR) ===== */
+    /* ===== MODAL (VISOR CON FLECHAS) ===== */
     .modal {
         display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-        background-color: rgba(0,0,0,0.92); align-items: center; justify-content: center;
+        background-color: rgba(0,0,0,0.95); align-items: center; justify-content: center;
     }
-    .modal-content { max-width: 90%; max-height: 90vh; border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-    .close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; cursor: pointer; }
+    .modal-content { 
+        max-width: 85%; max-height: 85vh; 
+        border-radius: 4px; 
+        box-shadow: 0 0 20px rgba(0,0,0,0.5); 
+        object-fit: contain;
+    }
+    .close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; cursor: pointer; z-index: 2005; }
+    
+    /* ESTILO DE LAS FLECHAS */
+    .modal-prev, .modal-next { 
+        position: absolute; top: 50%; transform: translateY(-50%); 
+        color: rgba(255,255,255,0.7); font-size: 3rem; font-weight: 300; 
+        cursor: pointer; z-index: 2002; padding: 1rem; user-select: none; transition: all 0.3s; 
+    }
+    .modal-prev:hover, .modal-next:hover { color: #fff; transform: translateY(-50%) scale(1.2); }
+    .modal-prev { left: 20px; }
+    .modal-next { right: 20px; }
     
     footer { text-align: center; padding: 2rem; color: #999; font-size: 0.8rem; margin-top: 3rem; border-top: 1px solid rgba(0,0,0,0.05); }
 
@@ -161,6 +175,7 @@
         .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .upload-section { padding: 2rem 1rem; }
         .btn-drive { width: 100%; padding: 1rem; font-size: 1rem; }
+        .modal-prev, .modal-next { font-size: 2rem; padding: 0.5rem; } /* Flechas más chicas en celu */
     }
   </style>
 </head>
@@ -184,8 +199,7 @@
       <div class="photo-grid">
           <div class="photo-item" onclick="openModal(this)"><img src="GooglePhotos/Portada.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
           <div class="photo-item" onclick="openModal(this)"><img src="GooglePhotos/Perritos.jpeg" alt="Foto"><div class="photo-overlay">+</div></div>
-
-      </div>
+          </div>
   </section>
 
   <section id="google-photos">
@@ -214,33 +228,74 @@
       <p>© 2026 Nene & Dani</p>
   </footer>
 
-  <div id="photoModal" class="modal" onclick="closeModal()">
-      <span class="close">&times;</span>
+  <div id="photoModal" class="modal">
+      <span class="close" onclick="closeModal()">×</span>
+      <a class="modal-prev" onclick="changeSlide(-1)">❮</a>
+      <a class="modal-next" onclick="changeSlide(1)">❯</a>
       <img class="modal-content" id="modalImg">
   </div>
 
   <script>
       const modal = document.getElementById("photoModal");
       const modalImg = document.getElementById("modalImg");
+      let currentIndex = 0; // Para saber qué foto estamos viendo
+      let allImages = [];   // Aquí guardaremos la lista de fotos
 
+      // Esta función se ejecuta al hacer clic en una foto de la grilla
       function openModal(element) {
-          const img = element.querySelector('img');
+          // 1. Buscamos todas las imágenes de la grilla
+          const imagesNodeList = document.querySelectorAll('.photo-item img');
+          allImages = Array.from(imagesNodeList); // Convertimos a lista real
+          
+          // 2. Buscamos cuál fue la que clickeaste
+          const clickedImg = element.querySelector('img');
+          currentIndex = allImages.indexOf(clickedImg);
+          
+          // 3. Mostramos esa foto
+          updateModalImage();
           modal.style.display = "flex";
-          modalImg.src = img.src;
       }
 
       function closeModal() {
           modal.style.display = "none";
       }
+
+      // Esta función mueve el carrusel (1 para adelante, -1 para atrás)
+      function changeSlide(step) {
+          currentIndex += step;
+          
+          // Si llegamos al final, volvemos al principio
+          if (currentIndex >= allImages.length) {
+              currentIndex = 0;
+          }
+          // Si estamos en la primera y volvemos atrás, vamos a la última
+          if (currentIndex < 0) {
+              currentIndex = allImages.length - 1;
+          }
+          
+          updateModalImage();
+      }
+
+      function updateModalImage() {
+          modalImg.src = allImages[currentIndex].src;
+      }
       
+      // Control con teclado (Flechas) y Escape
       document.addEventListener('keydown', function(event) {
-          if (event.key === "Escape") {
-              closeModal();
+          if (modal.style.display === "flex") {
+              if (event.key === "Escape") closeModal();
+              if (event.key === "ArrowRight") changeSlide(1);
+              if (event.key === "ArrowLeft") changeSlide(-1);
           }
       });
+      
+      // Cerrar si hacen clic afuera de la foto
+      window.onclick = function(event) {
+        if (event.target == modal) {
+            closeModal();
+        }
+      }
   </script>
 
 </body>
 </html>
-
-
